@@ -2,8 +2,10 @@
 import { Grid } from "@mui/material";
 import Image from "next/image";
 import { SignInWithLens, Theme, Tokens } from "@lens-protocol/widgets-react";
+import { useActiveWallet } from "@lens-protocol/react-web";
 
 export default function Header() {
+    const { data: wallet } = useActiveWallet();
 
     async function onSignIn(tokens: Tokens, profile: any) {
         console.log('tokens: ', tokens)
@@ -20,10 +22,15 @@ export default function Header() {
             </Grid>
             <Grid item xs={5} >
                 <div style={{ padding: '15px', display: 'flex', justifyContent: 'flex-end' }}>
-                    <SignInWithLens
-                        theme={Theme.green}
-                        onSignIn={onSignIn}
-                    />
+                    {
+                        !wallet && (
+                            <SignInWithLens
+                                theme={Theme.green}
+                                onSignIn={onSignIn}
+                            />
+                        )
+                    }
+
                 </div>
             </Grid>
         </Grid>
