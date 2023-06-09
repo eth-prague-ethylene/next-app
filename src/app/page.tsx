@@ -1,9 +1,10 @@
+'use client'
 import "./styles/bottomNavigation.css"
 
-export default function Home() {
+export const Home = () => {
   return (
     <main>
-
+      
     </main>
   )
 }
