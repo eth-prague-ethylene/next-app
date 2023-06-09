@@ -1,0 +1,8 @@
+.footer-container {
+    .MuiSvgIcon-root {
+        color: white
+    }
+    .MuiBottomNavigationAction-label {
+        color: white
+    }
+}
