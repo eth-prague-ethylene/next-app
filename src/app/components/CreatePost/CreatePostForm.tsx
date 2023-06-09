@@ -1,7 +1,14 @@
 import { Grid } from "@mui/material"
 import { Formik } from 'formik';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-export const CreatePostForm = () => {
+import { ProfileOwnedByMe } from '@lens-protocol/react-web';
+
+export const CreatePostForm = ({
+    publisher
+}: {
+    publisher: ProfileOwnedByMe | null
+}) => {
+
     return (
         <Formik
             initialValues={{ postContent: '' }}

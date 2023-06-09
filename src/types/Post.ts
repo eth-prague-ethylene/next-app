@@ -1,0 +1,1 @@
+export type UmaStatuses = 'verified' | 'incorrect' | 'pending'
