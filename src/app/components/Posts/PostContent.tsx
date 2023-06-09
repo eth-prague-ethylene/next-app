@@ -1,19 +1,22 @@
 import { Grid, Typography } from "@mui/material"
 import { PostHeader } from "./PostHeader"
+import { MediaSet, NftImage } from "@lens-protocol/react-web"
 
-export const PostContent = () => {
+export const PostContent = ({ profile, username, handle, textContent }: {
+    profile: MediaSet | NftImage | null, username: string, handle: string, textContent: string
+}) => {
     return (
         <Grid container>
             <Grid item xs={12}>
                 <PostHeader
-                    username={'MacDonalds'}
-                    url={'https://logos-download.com/wp-content/uploads/2016/03/McDonalds_Logo_2018.png'}
-                    handle={'@MacDonaldOfficial'}
+                    username={username}
+                    picture={profile}
+                    handle={handle}
                 />
             </Grid>
             <Grid item xs={12}>
                 <Typography variant="body2">
-                    Today we have planted one tree per each burger we have sold in our restaurants!
+                    {textContent}
                 </Typography>
             </Grid>
         </Grid>
