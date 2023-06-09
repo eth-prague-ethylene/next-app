@@ -1,5 +1,7 @@
 import LabelBottomNavigation from './components/BottomNavigation'
+import Header from './components/Header'
 import './globals.css'
+import './styles/BottomNavigation.css'
 import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -17,6 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body >
+        <Header />
         {children}
         <LabelBottomNavigation />
       </body>
