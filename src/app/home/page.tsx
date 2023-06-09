@@ -1,6 +1,7 @@
 'use client'
 
 import { useActiveWallet } from "@lens-protocol/react-web";
+import { CreatePostForm } from "../components/CreatePost/CreatePostForm";
 
 export default function Home() {
   // authentication hooks
@@ -8,6 +9,7 @@ export default function Home() {
 
   return (
     <>
+    <CreatePostForm />
       {
         wallet ? (
           <div>{wallet.address}</div>
