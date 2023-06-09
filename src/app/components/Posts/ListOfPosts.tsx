@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 
 export const ListOfPosts = () => {
     const { data, loading, hasMore, next } = useExplorePublications({
-        limit: 10
+        limit: 1
     });
 
     return (
