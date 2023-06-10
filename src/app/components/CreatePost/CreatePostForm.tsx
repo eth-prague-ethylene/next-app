@@ -4,6 +4,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { uploadJson } from "@/app/utils";
 import { ContentFocus, ProfileOwnedByMe, useActiveWallet, useCreatePost } from '@lens-protocol/react-web';
 import { useEffect } from "react";
+import { createPost, getHandle, getProfile } from "@/apis/getProfile";
 
 export const CreatePostForm = ({ publisher }: {
     publisher: ProfileOwnedByMe
@@ -14,11 +15,10 @@ export const CreatePostForm = ({ publisher }: {
     const handleSubmit = async (values: any) => {
         if (wallet != null) {
             const content = values.postContent;
-            await create({
-                content: content,
-                contentFocus: ContentFocus.TEXT_ONLY,
-                locale: 'en',
-            })
+            const uri = await uploadJson(content);
+            const handle = await getHandle(wallet.address);
+            const profileId = await getProfile(handle);
+            await createPost(profileId, uri, wallet.address);
         }
     }
 
