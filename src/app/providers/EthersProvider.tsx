@@ -12,7 +12,7 @@ const EthersContext = createContext<EthersProvider>({} as EthersProvider);
 export const EthProvider = ({ children }: {
     children: any
 }) => {
-    const contractAddress = "0x2D96423Ac85C7cC9cF9Ac5B391536c39d76A399f";
+    const contractAddress = "0x5ED4c9948FA1BAd69B5345ea5102F8Cd89146571";
     const provider = new ethers.providers.Web3Provider(window.ethereum as unknown as ethers.providers.ExternalProvider);
 
     const settle = async (postId: string): Promise<any> => {
@@ -34,7 +34,7 @@ export const EthProvider = ({ children }: {
     const getAssertionData = async (postId: string, profileId: string) => {
         const contract = new ethers.Contract(contractAddress, abi, provider);
         const fullPostid = `${profileId}-${postId}`;
-        console.log(fullPostid)
+        console.log(`${fullPostid} - ${stringToHex(fullPostid)}`);
         const data = await contract.getAssertionData(stringToHex(fullPostid));
         return data;
     }

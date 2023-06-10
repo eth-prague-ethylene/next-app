@@ -1,5 +1,5 @@
-import { AnyPublication, useExplorePublications } from "@lens-protocol/react-web";
-import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+import { AnyPublication, PublicationSortCriteria, useExplorePublications } from "@lens-protocol/react-web";
+import { createContext, useContext, useEffect, useState } from "react";
 
 type PublicationProvider = {
     publications: any[] | undefined,
@@ -10,10 +10,12 @@ export const PubProvider = ({ children }: {
     children: any
 }) => {
     const [publications, setPublications] = useState<AnyPublication[]>();
-    const [myPublications, setMyPublications] = useState<AnyPublication[]>();
     const { data, loading, hasMore, next } = useExplorePublications({
         limit: 5,
+        sortCriteria: PublicationSortCriteria.Latest
     });
+
+    console.log({ data })
 
     useEffect(() => {
         if (data != undefined) {

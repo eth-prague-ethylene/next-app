@@ -31,12 +31,11 @@ export const CreatePostForm = ({ publisher }: {
                 const profileId = await getProfile(handle);
                 const newPost = await createPost(profileId, uri, wallet.address);
                 const postId = newPost?.data.createPostTypedData.id;
-                
                 const hexString = '0x' + newPost?.data.createPostTypedData.typedData.value.nonce.toString(16).padStart(2, '0');
+                console.log(`hexString: ${hexString}`);
                 const truePostId = `${profileId}-${hexString}`;
-                
 
-                console.log(`Posting this id: ${truePostId}`);
+                console.log(`truePostID: ${truePostId}`);
 
                 await assertToOracle(content, truePostId);
                 if (publications != undefined) {
@@ -51,7 +50,7 @@ export const CreatePostForm = ({ publisher }: {
                             content: content
                         },
                         numberOfComments: 0
-                    }, ...publications]);
+                    },...publications]);
                 }
                 closeLoadingToast();
                 setLoading(false);
@@ -109,16 +108,16 @@ export const CreatePostForm = ({ publisher }: {
                             maxHeight: '32px'
                         }}>
                             <button style={{
-                                 border: 'none',
-                                 background: 'linear-gradient(to right, #8E2DE2, #4A00E0)',
-                                 borderRadius: '100px',
-                                 width: '50px',
-                                 top: '-25px',
-                                 color: 'white',
-                                 position: 'relative',
-                                 height: '50px',
-                                 transform: 'scale(0.7)'
-                            }}type="submit" disabled={loading} >
+                                border: 'none',
+                                background: 'linear-gradient(to right, #8E2DE2, #4A00E0)',
+                                borderRadius: '100px',
+                                width: '50px',
+                                top: '-25px',
+                                color: 'white',
+                                position: 'relative',
+                                height: '50px',
+                                transform: 'scale(0.7)'
+                            }} type="submit" disabled={loading} >
                                 <ArrowForwardIcon />
                             </button>
                         </Grid>

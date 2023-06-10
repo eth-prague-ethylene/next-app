@@ -16,7 +16,7 @@ export const Post = ({ picture, handle, username, lensPostId, textContent, numbe
 
     useEffect(() => {
         (async () => {
-            const data = await getAssertionData(BigNumber.from(lensPostId.slice(-4)).sub('0x01').toHexString(), username);
+            const data = await getAssertionData(BigNumber.from(lensPostId.slice(-4)).sub('0x00').toHexString(), username);
             const expTime = data.expirationTime;
             const now = Math.floor(Date.now() / 1000);
             console.log(data);

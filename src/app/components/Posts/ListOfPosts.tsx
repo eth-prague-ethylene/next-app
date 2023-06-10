@@ -16,11 +16,15 @@ export const ListOfPosts = () => {
         })()
     })
 
+    useEffect(() => {
+        console.log(JSON.stringify(publications));
+    }, [publications])
+
     return (
         <Grid container>
             {
                 publications != undefined ? (
-                    publications.map((post: AnyPublication, index: number) => {
+                    publications.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((post: AnyPublication, index: number) => {
                         return (
                             <Post
                                 key={index}
