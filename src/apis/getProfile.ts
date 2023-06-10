@@ -2,11 +2,45 @@ import { uploadJson } from '@/app/utils';
 import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
 import { CreatePostTypedDataDocument, CreatePublicPostRequest } from '@lens-protocol/api-bindings';
 import { ProfileId } from '@lens-protocol/react-web';
-import { TypedDataDomain, Wallet } from 'ethers';
+import { TypedDataDomain, Wallet, utils } from 'ethers';
 import { ethers } from 'ethers';
 // @ts-ignore
 import omitDeep from 'omit-deep';
 const APIURL = 'https://api-mumbai.lens.dev/';
+import ABI from '../../abi.json'
+
+export const prettyJSON = (message: string, obj: string) => {
+  console.log(message, JSON.stringify(obj, null, 2));
+};
+
+export const sleep = (milliseconds: number): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+};
+
+export const omit = (object: any, name: string) => {
+  return omitDeep(object, name);
+};
+
+export const signedTypeData = async (
+  domain: TypedDataDomain,
+  types: Record<string, any>,
+  value: Record<string, any>,
+  signer: any
+) => {
+  // remove the __typedname from the signature!
+  const result = await signer._signTypedData(
+    omit(domain, '__typename'),
+    omit(types, '__typename'),
+    omit(value, '__typename')
+  );
+
+
+  return result;
+};
+
+export const splitSignature = (signature: string) => {
+  return utils.splitSignature(signature);
+};
 
 export const apolloClient = new ApolloClient({
   uri: APIURL,
@@ -95,7 +129,6 @@ export const createPost = async (profileId: string, contentURI: string, address:
                 createPostTypedData(request: {
                   profileId: "${profileId}",
                   contentURI: "${contentURI}",
-
                   collectModule: {
                     revertCollectModule: true
                   },
@@ -133,10 +166,53 @@ export const createPost = async (profileId: string, contentURI: string, address:
               }
             `)
     })
-    console.log(result);
+    const signedResult = result
+    console.log(signedResult)
+    const { data } = signedResult
+    const { createPostTypedData } = data
+    const { typedData } = createPostTypedData
+    const sig2 = await signedTypeData(typedData.domain, typedData.types, typedData.value, signer);
+
+    console.log('sig2: ', sig2)
+  
+    const { v, r, s } = splitSignature(sig2);
+
+
+
+    const lensHub = new ethers.Contract("0x60Ae865ee4C725cd04353b5AAb364553f56ceF82", ABI, signer);
+
+    const tx = await lensHub.postWithSig({
+      profileId: typedData.value.profileId,
+      contentURI: typedData.value.contentURI,
+      collectModule: typedData.value.collectModule,
+      collectModuleInitData: typedData.value.collectModuleInitData,
+      referenceModule: typedData.value.referenceModule,
+      referenceModuleInitData: typedData.value.referenceModuleInitData,
+      sig: {
+        v,
+        r,
+        s,
+        deadline: typedData.value.deadline,
+      },
+    });
+  
+    console.log(tx);
     return result;
   }
 }
+
+// export const signCreatePostTypedData = async (request: CreatePublicPostRequest) => {
+//   const result = await createPostTypedData(request);
+//   console.log('create post: createPostTypedData', result);
+
+//   const typedData = result.typedData;
+//   console.log('create post: typedData', typedData);
+
+//   const signature = await signedTypeData(typedData.domain, typedData.types, typedData.value);
+//   console.log('create post: signature', signature);
+
+//   return { result, signature };
+// };
 
 // export const getError = async () => {
 //   const result = await apolloClient.query({

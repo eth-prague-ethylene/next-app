@@ -1,4 +1,5 @@
 // req = HTTP incoming message, res = HTTP server response
+import { v4 as uuidv4 } from 'uuid';
 
 // Use the api keys by providing the strings directly 
 import pinataSDK from '@pinata/sdk';
@@ -13,14 +14,15 @@ export default async function handler(req: any, res: any) {
     }
     const body = {
         version: "2.0.0",
-        metadata_id: "83235e1a-839c-4c9e-bafd-dc62ed889146",
+        metadata_id: uuidv4(),
         appId: "ethylene",
         mainContentFocus: 'TEXT_ONLY',
         content: content,
         description: "Description of the post",
         name: `Post by ${handle}`,
         locale: 'en-US',
-        tags: ['lens-sdk']
+        tags: ['lens-sdk'],
+        attributes: []
     }
     console.log(body);
     const result = await pinata.pinJSONToIPFS(body);

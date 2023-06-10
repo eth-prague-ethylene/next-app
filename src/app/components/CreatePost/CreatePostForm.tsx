@@ -3,7 +3,6 @@ import { Formik } from 'formik';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { uploadJson } from "@/app/utils";
 import { ContentFocus, ProfileOwnedByMe, useActiveProfile, useActiveWallet, useCreatePost } from '@lens-protocol/react-web';
-import { useEffect } from "react";
 import { createPost, getHandle, getProfile } from "@/apis/getProfile";
 import { usePubProvider } from "@/app/providers/PublicationProivder";
 import { useEthProvider } from "@/app/providers/EthersProvider";
@@ -24,7 +23,7 @@ export const CreatePostForm = ({ publisher }: {
             const profileId = await getProfile(handle);
             const newPost = await createPost(profileId, uri, wallet.address);
             const postId = newPost?.data.createPostTypedData.id;
-            await assertToOracle(content, postId)
+            await assertToOracle(content, postId);
             if (publications != undefined) {
                 handleSetPublications([{
                     id: postId,
@@ -32,7 +31,7 @@ export const CreatePostForm = ({ publisher }: {
                         username: data?.id,
                         picture: data?.picture,
                         handle: data?.handle,
-                    },
+                    },  
                     metadata: {
                         content: content
                     },

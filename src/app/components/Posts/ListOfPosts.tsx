@@ -2,14 +2,9 @@ import { AnyPublication, useExplorePublications } from '@lens-protocol/react-web
 import { Grid, Skeleton } from '@mui/material';
 import { Post } from './Post';
 import { usePubProvider } from '@/app/providers/PublicationProivder';
-import { useEffect } from 'react';
-
 export const ListOfPosts = () => {
+    
     const { publications } = usePubProvider();
-
-    useEffect(() => {
-        console.log(publications);
-    }, [publications])
 
     return (
         <Grid container>

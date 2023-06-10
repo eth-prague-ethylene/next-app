@@ -11,6 +11,7 @@ import { LensProvider, LensConfig, appId, development, sources } from '@lens-pro
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi'
 import { PubProvider } from './providers/PublicationProivder'
 import { EthProvider } from './providers/EthersProvider'
+import { constants } from '@/constants'
 
 const { provider, webSocketProvider } = configureChains([polygonMumbai], [publicProvider()])
 
@@ -23,8 +24,8 @@ const client = createClient({
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
   environment: development,
-  appId: appId('ethylene'),
-  sources: [sources.lenster, appId('ethylene')]
+  appId: appId(constants.LENS_APP_ID),
+  sources: [appId(constants.LENS_APP_ID)]
 };
 
 export default function RootLayout({

@@ -1,5 +1,6 @@
 import { AnyPublication, useExplorePublications } from "@lens-protocol/react-web";
 import { Dispatch, SetStateAction, createContext, useContext, useEffect, useState } from "react";
+
 type PublicationProvider = {
     publications: any[] | undefined,
     handleSetPublications: (newArray: any[]) => void
@@ -9,9 +10,14 @@ export const PubProvider = ({ children }: {
     children: any
 }) => {
     const [publications, setPublications] = useState<AnyPublication[]>();
+    const [myPublications, setMyPublications] = useState<AnyPublication[]>();
     const { data, loading, hasMore, next } = useExplorePublications({
-        limit: 1,
+        limit: 5,
     });
+
+    useEffect(() => {
+        console.log(data);
+    }, [data])
 
     useEffect(() => {
         if (data != undefined) {
