@@ -12,6 +12,7 @@ import { bindings as wagmiBindings } from '@lens-protocol/wagmi'
 import { PubProvider } from './providers/PublicationProivder'
 import { EthProvider } from './providers/EthersProvider'
 import { constants } from '@/constants'
+import toast, { Toaster } from 'react-hot-toast';
 
 const { provider, webSocketProvider } = configureChains([polygonMumbai], [publicProvider()])
 
@@ -44,6 +45,7 @@ export default function RootLayout({
           <LensProvider config={lensConfig}>
             <EthProvider>
               <PubProvider>
+                <Toaster position='bottom-center' />
                 <Header />
                 {children}
                 <LabelBottomNavigation />

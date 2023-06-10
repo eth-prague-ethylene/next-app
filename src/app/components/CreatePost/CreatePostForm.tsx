@@ -2,10 +2,12 @@ import { Grid } from "@mui/material"
 import { Formik } from 'formik';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { uploadJson } from "@/app/utils";
-import { ContentFocus, ProfileOwnedByMe, useActiveProfile, useActiveWallet, useCreatePost } from '@lens-protocol/react-web';
+import { ProfileOwnedByMe, useActiveProfile, useActiveWallet, useCreatePost } from '@lens-protocol/react-web';
 import { createPost, getHandle, getProfile } from "@/apis/getProfile";
 import { usePubProvider } from "@/app/providers/PublicationProivder";
 import { useEthProvider } from "@/app/providers/EthersProvider";
+import { useState } from "react";
+import { toast } from 'react-hot-toast';
 
 export const CreatePostForm = ({ publisher }: {
     publisher: ProfileOwnedByMe
@@ -14,31 +16,51 @@ export const CreatePostForm = ({ publisher }: {
     const { assertToOracle } = useEthProvider();
     const { data: wallet } = useActiveWallet();
     const { data } = useActiveProfile();
+    const [toastId, setToastId] = useState('');
 
     const handleSubmit = async (values: any) => {
-        if (wallet != null) {
-            const content = values.postContent;
-            const handle = await getHandle(wallet.address);
-            const uri = await uploadJson(content, handle);
-            const profileId = await getProfile(handle);
-            const newPost = await createPost(profileId, uri, wallet.address);
-            const postId = newPost?.data.createPostTypedData.id;
-            await assertToOracle(content, postId);
-            if (publications != undefined) {
-                handleSetPublications([{
-                    id: postId,
-                    profile: {
-                        username: data?.id,
-                        picture: data?.picture,
-                        handle: data?.handle,
-                    },  
-                    metadata: {
-                        content: content
-                    },
-                    numberOfComments: 0
-                }, ...publications]);
+        try {
+            openLoadingToast();
+            if (wallet != null) {
+                const content = values.postContent;
+                const handle = await getHandle(wallet.address);
+                const uri = await uploadJson(content, handle);
+                const profileId = await getProfile(handle);
+                const newPost = await createPost(profileId, uri, wallet.address);
+                const postId = newPost?.data.createPostTypedData.id;
+                await assertToOracle(content, postId);
+                if (publications != undefined) {
+                    handleSetPublications([{
+                        id: postId,
+                        profile: {
+                            username: data?.id,
+                            picture: data?.picture,
+                            handle: data?.handle,
+                        },
+                        metadata: {
+                            content: content
+                        },
+                        numberOfComments: 0
+                    }, ...publications]);
+                }
+                closeLoadingToast();
+                toast.success('Post uploaded!');
             }
+        } catch (error: any) {
+            toast.error(error.message);
+        } finally {
+            closeLoadingToast();
         }
+    }
+
+    const openLoadingToast = () => {
+        const id = toast.loading('loading');
+        setToastId(id);
+    }
+
+    const closeLoadingToast = () => {
+        toast.dismiss(toastId);
+        setToastId('');
     }
 
     return (

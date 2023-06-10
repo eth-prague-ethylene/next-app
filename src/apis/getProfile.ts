@@ -167,17 +167,12 @@ export const createPost = async (profileId: string, contentURI: string, address:
             `)
     })
     const signedResult = result
-    console.log(signedResult)
     const { data } = signedResult
     const { createPostTypedData } = data
     const { typedData } = createPostTypedData
     const sig2 = await signedTypeData(typedData.domain, typedData.types, typedData.value, signer);
 
-    console.log('sig2: ', sig2)
-  
     const { v, r, s } = splitSignature(sig2);
-
-
 
     const lensHub = new ethers.Contract("0x60Ae865ee4C725cd04353b5AAb364553f56ceF82", ABI, signer);
 
