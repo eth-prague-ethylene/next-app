@@ -2,24 +2,37 @@ import { Grid } from "@mui/material"
 import { Formik } from 'formik';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { uploadJson } from "@/app/utils";
-import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';
+import { ContentFocus, ProfileOwnedByMe, useActiveWallet, useCreatePost } from '@lens-protocol/react-web';
+import { useEffect } from "react";
 
-export const CreatePostForm = ({
-    publisher
-}: {
+export const CreatePostForm = ({ publisher }: {
     publisher: ProfileOwnedByMe
 }) => {
+    const { data: wallet } = useActiveWallet();
     const { execute: create, error, isPending } = useCreatePost({ publisher, upload: uploadJson });
 
     const handleSubmit = async (values: any) => {
-        const content = values.content;
-        await create({
-            content,
-            contentFocus: ContentFocus.TEXT_ONLY,
-            locale: 'en'
-        });
+        if (wallet != null) {
+            const content = values.postContent;
+            await create({
+                content: content,
+                contentFocus: ContentFocus.TEXT_ONLY,
+                locale: 'en',
+            })
+        }
     }
 
+    useEffect(() => {
+        console.log(publisher);
+    }, [publisher])
+
+    useEffect(() => {
+        console.log(`Is pending: ${isPending}`)
+    }, [isPending]);
+
+    useEffect(() => {
+        console.log(`Error: ${error}`);
+    }, [error])
     return (
         <Formik
             initialValues={{ postContent: '' }}

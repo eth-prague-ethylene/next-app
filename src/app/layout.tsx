@@ -4,17 +4,17 @@ import LabelBottomNavigation from './components/BottomNavigation'
 import Header from './components/Header'
 import './globals.css'
 import './styles/BottomNavigation.css'
-import { configureChains, createClient, WagmiConfig } from 'wagmi'
+import { configureChains, createClient, mainnet, WagmiConfig } from 'wagmi'
 import { polygonMumbai, polygon } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { LensProvider, LensConfig, appId, development, sources } from '@lens-protocol/react-web'
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi'
-const { provider, webSocketProvider } = configureChains([polygon, polygonMumbai], [publicProvider()])
+const { provider, webSocketProvider } = configureChains([polygon, mainnet], [publicProvider()])
 
 const client = createClient({
   autoConnect: true,
   provider,
-  webSocketProvider
+  webSocketProvider,
 });
 
 const lensConfig: LensConfig = {

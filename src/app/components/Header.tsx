@@ -1,16 +1,32 @@
 "use client"
 import { Grid } from "@mui/material";
 import Image from "next/image";
-import { SignInWithLens, Theme, Tokens } from "@lens-protocol/widgets-react";
-import { useActiveWallet } from "@lens-protocol/react-web";
+import { useWalletLogin } from "@lens-protocol/react-web";
+import { useAccount, useDisconnect, useConnect } from "wagmi";
+import { InjectedConnector } from 'wagmi/connectors/injected';
 
 export default function Header() {
-    const { data: wallet } = useActiveWallet();
+    const { execute: login, isPending: isLoginPending } = useWalletLogin();
 
-    async function onSignIn(tokens: Tokens, profile: any) {
-        console.log('tokens: ', tokens)
-        console.log('profile: ', profile)
-    }
+    const { isConnected } = useAccount();
+    const { disconnectAsync } = useDisconnect();
+
+    const { connectAsync } = useConnect({
+        connector: new InjectedConnector(),
+    });
+
+    const onLoginClick = async () => {
+        if (isConnected) {
+            await disconnectAsync();
+        }
+
+        const { connector } = await connectAsync();
+
+        if (connector instanceof InjectedConnector) {
+            const signer = await connector.getSigner();
+            await login(signer);
+        }
+    };
 
     return (
         <Grid container sx={{ maxHeight: '150px' }}>
@@ -22,15 +38,9 @@ export default function Header() {
             </Grid>
             <Grid item xs={5} >
                 <div style={{ padding: '15px', display: 'flex', justifyContent: 'flex-end' }}>
-                    {
-                        !wallet && (
-                            <SignInWithLens
-                                theme={Theme.green}
-                                onSignIn={onSignIn}
-                            />
-                        )
-                    }
-
+                    <button disabled={isLoginPending} onClick={onLoginClick}>
+                        Sign in
+                    </button>
                 </div>
             </Grid>
         </Grid>

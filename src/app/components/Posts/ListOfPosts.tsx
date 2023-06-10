@@ -25,9 +25,9 @@ export const ListOfPosts = () => {
                         )
                     })
                 ) : (
-                    [1, 2, 3, 4, 5].map(() => {
+                    [1, 2, 3, 4, 5].map((index) => {
                         return (
-                            <Skeleton sx={{ marginTop: '1em', position: 'relative', marginRight: '10px', marginLeft: '10px' }} variant="rectangular" width={'100%'} height={200} />
+                            <Skeleton key={index} sx={{ marginTop: '1em', position: 'relative', marginRight: '10px', marginLeft: '10px' }} variant="rectangular" width={'100%'} height={200} />
                         )
                     })
                 )
