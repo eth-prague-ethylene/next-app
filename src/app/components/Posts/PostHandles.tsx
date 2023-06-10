@@ -20,7 +20,7 @@ export const PostHandles = ({ status, numberOfComments, postId }: {
     return (
         <Grid container>
             <Grid item xs={8}>
-                <Badge color={'primary'}
+                <Badge color={'secondary'} className='badge-container'
                     badgeContent={numberOfComments == undefined ? Math.floor(Math.random() * 100) : numberOfComments}>
                     <CommentIcon />
                 </Badge>

@@ -43,7 +43,7 @@ export default function Header() {
                         disabled={isLoginPending}
                         onClick={onLoginClick}
                         style={{
-                            background: '#00501E',
+                            background: 'linear-gradient(to right, #8E2DE2, #4A00E0)',
                             display: 'flex',
                             alignItems: 'center',
                             position: 'relative',
