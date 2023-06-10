@@ -1,22 +1,31 @@
 import { Grid } from "@mui/material"
 import { Formik } from 'formik';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { ProfileOwnedByMe } from '@lens-protocol/react-web';
+import { uploadJson } from "@/app/utils";
+import { ContentFocus, ProfileOwnedByMe, useCreatePost } from '@lens-protocol/react-web';
 
 export const CreatePostForm = ({
     publisher
 }: {
-    publisher: ProfileOwnedByMe | null
+    publisher: ProfileOwnedByMe
 }) => {
+    const { execute: create, error, isPending } = useCreatePost({ publisher, upload: uploadJson });
+
+    const handleSubmit = async (values: any) => {
+        const content = values.content;
+        await create({
+            content,
+            contentFocus: ContentFocus.TEXT_ONLY,
+            locale: 'en'
+        });
+    }
 
     return (
         <Formik
             initialValues={{ postContent: '' }}
             onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                    alert(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                }, 400);
+                setSubmitting(false);
+                handleSubmit(values);
             }}
         >
             {(formik) => (

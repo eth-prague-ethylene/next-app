@@ -5,12 +5,11 @@ import Header from './components/Header'
 import './globals.css'
 import './styles/BottomNavigation.css'
 import { configureChains, createClient, WagmiConfig } from 'wagmi'
-import { mainnet, polygon } from 'wagmi/chains'
+import { polygonMumbai, polygon } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
-import { LensProvider, LensConfig, production, appId } from '@lens-protocol/react-web'
+import { LensProvider, LensConfig, appId, development, sources } from '@lens-protocol/react-web'
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi'
-import { constants } from '@/constants'
-const { provider, webSocketProvider } = configureChains([polygon, mainnet], [publicProvider()])
+const { provider, webSocketProvider } = configureChains([polygon, polygonMumbai], [publicProvider()])
 
 const client = createClient({
   autoConnect: true,
@@ -20,9 +19,11 @@ const client = createClient({
 
 const lensConfig: LensConfig = {
   bindings: wagmiBindings(),
-  appId: appId(constants.LENS_APP_ID),
-  environment: production,
+  environment: development,
+  appId: appId('ethylene'),
+  sources: [sources.lenster, appId('ethylene')]
 };
+
 export default function RootLayout({
   children,
 }: {
