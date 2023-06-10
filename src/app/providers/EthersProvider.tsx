@@ -4,15 +4,24 @@ import { abi } from "../../abis/Ethylene.js";
 import { ethers } from "ethers";
 type EthersProvider = {
     assertToOracle: (contentOfThePost: string, postId: string) => Promise<void>,
-    getAssertionData: (postId: string) => Promise<any>,
-    getArrayData: () => Promise<any>
+    getAssertionData: (postId: string, profileId: string) => Promise<any>,
+    getArrayData: () => Promise<any>,
+    settle: (postId: string) => Promise<any>
 }
 const EthersContext = createContext<EthersProvider>({} as EthersProvider);
 export const EthProvider = ({ children }: {
     children: any
 }) => {
-    const contractAddress = "0xFBE786F2717106B5Fe17EE4F346907ab5d715a63";
+    const contractAddress = "0x2D96423Ac85C7cC9cF9Ac5B391536c39d76A399f";
     const provider = new ethers.providers.Web3Provider(window.ethereum as unknown as ethers.providers.ExternalProvider);
+
+    const settle = async (postId: string): Promise<any> => {
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, abi, signer);
+        const trx = await contract.settleAssertion(stringToHex(postId));
+        const receipt = await trx.wait();
+        console.log(receipt);
+    }
 
     const assertToOracle = async (contentOfThePost: string, postId: string) => {
         const signer = provider.getSigner();
@@ -22,10 +31,11 @@ export const EthProvider = ({ children }: {
         await trx.wait();
     }
 
-    const getAssertionData = async (postId: string) => {
+    const getAssertionData = async (postId: string, profileId: string) => {
         const contract = new ethers.Contract(contractAddress, abi, provider);
-        const data = await contract.getAssertionData(stringToHex(postId));
-        console.log(data);
+        const fullPostid = `${profileId}-${postId}`;
+        console.log(fullPostid)
+        const data = await contract.getAssertionData(stringToHex(fullPostid));
         return data;
     }
 
@@ -54,10 +64,13 @@ export const EthProvider = ({ children }: {
     const getArrayData = async (): Promise<any> => {
         const contract = new ethers.Contract(contractAddress, abi, provider);
         const data = await contract.getArrayData();
+        console.log(data);
+        console.log(stringToHex('0x857d-0x18') === data[0]);
     }
 
     return <EthersContext.Provider value={{
         assertToOracle,
+        settle,
         getAssertionData,
         getArrayData
     }}>{children}</EthersContext.Provider>

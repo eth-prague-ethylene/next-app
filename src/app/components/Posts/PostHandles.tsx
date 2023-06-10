@@ -1,15 +1,21 @@
 import { umaStatuses } from "@/constants"
-import { UmaStatuses } from "@/types/Post"
 import { Badge, Chip, Grid, Typography } from "@mui/material"
 import CommentIcon from '@mui/icons-material/Comment';
-export const PostHandles = ({ status, numberOfComments }: {
-    status: UmaStatuses,
-    numberOfComments: number | null
+import { useEthProvider } from "@/app/providers/EthersProvider";
+export const PostHandles = ({ status, numberOfComments, postId }: {
+    status: string,
+    numberOfComments: number | null,
+    postId: string
 }) => {
+    const { settle } = useEthProvider();
     const getBackgroundColor = () => {
         if (status === umaStatuses.FALSE) return 'red';
         if (status === umaStatuses.TRUE) return 'green';
         if (status === umaStatuses.PENDING) return 'yellow';
+        if (status === umaStatuses.CLICK_TO_SETTLE) return 'orange'
+    }
+    const handleClick = async () => {
+        await settle(postId);
     }
     return (
         <Grid container>
@@ -21,11 +27,13 @@ export const PostHandles = ({ status, numberOfComments }: {
                 <Typography variant={'caption'}>{ }</Typography>
             </Grid>
             <Grid item xs={4} textAlign={'right'}>
-                <Chip label={status} sx={{
-                    background: getBackgroundColor(),
-                    color: 'black',
-                    height: '20px'
-                }} />
+                <Chip label={status}
+                    onClick={handleClick}
+                    sx={{
+                        background: getBackgroundColor(),
+                        color: 'black',
+                        height: '20px'
+                    }} />
             </Grid>
         </Grid>
     )
