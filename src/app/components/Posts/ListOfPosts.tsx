@@ -2,9 +2,19 @@ import { AnyPublication, useExplorePublications } from '@lens-protocol/react-web
 import { Grid, Skeleton } from '@mui/material';
 import { Post } from './Post';
 import { usePubProvider } from '@/app/providers/PublicationProivder';
+import { useEffect } from 'react';
+import { useEthProvider } from '@/app/providers/EthersProvider';
+
 export const ListOfPosts = () => {
     
     const { publications } = usePubProvider();
+    const { getArrayData } = useEthProvider()
+
+    useEffect(() => {
+        (async () => {
+            await getArrayData();
+        })()
+    })
 
     return (
         <Grid container>

@@ -16,10 +16,6 @@ export const PubProvider = ({ children }: {
     });
 
     useEffect(() => {
-        console.log(data);
-    }, [data])
-
-    useEffect(() => {
         if (data != undefined) {
             setPublications([...data]);
         }

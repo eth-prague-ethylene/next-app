@@ -8,6 +8,7 @@ import { usePubProvider } from "@/app/providers/PublicationProivder";
 import { useEthProvider } from "@/app/providers/EthersProvider";
 import { useState } from "react";
 import { toast } from 'react-hot-toast';
+import { BigNumber } from "ethers";
 
 export const CreatePostForm = ({ publisher }: {
     publisher: ProfileOwnedByMe
@@ -17,8 +18,10 @@ export const CreatePostForm = ({ publisher }: {
     const { data: wallet } = useActiveWallet();
     const { data } = useActiveProfile();
     const [toastId, setToastId] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (values: any) => {
+        setLoading(true);
         try {
             openLoadingToast();
             if (wallet != null) {
@@ -28,7 +31,14 @@ export const CreatePostForm = ({ publisher }: {
                 const profileId = await getProfile(handle);
                 const newPost = await createPost(profileId, uri, wallet.address);
                 const postId = newPost?.data.createPostTypedData.id;
-                await assertToOracle(content, postId);
+                
+                const hexString = '0x' + newPost?.data.createPostTypedData.typedData.value.nonce.toString(16).padStart(2, '0');
+                const truePostId = `${profileId}-${hexString}`;
+                
+
+                console.log(`Posting this id: ${truePostId}`);
+
+                await assertToOracle(content, truePostId);
                 if (publications != undefined) {
                     handleSetPublications([{
                         id: postId,
@@ -44,12 +54,14 @@ export const CreatePostForm = ({ publisher }: {
                     }, ...publications]);
                 }
                 closeLoadingToast();
+                setLoading(false);
                 toast.success('Post uploaded!');
             }
         } catch (error: any) {
             toast.error(error.message);
         } finally {
             closeLoadingToast();
+            setLoading(false);
         }
     }
 
@@ -96,16 +108,17 @@ export const CreatePostForm = ({ publisher }: {
                             textAlign: 'right',
                             maxHeight: '32px'
                         }}>
-                            <button type="submit" style={{
-                                background: '#843FE9',
-                                border: 'none',
-                                borderRadius: '100px',
-                                width: '50px',
-                                top: '-25px',
-                                position: 'relative',
-                                height: '50px',
-                                transform: 'scale(0.7)',
-                            }}>
+                            <button style={{
+                                 border: 'none',
+                                 background: 'linear-gradient(to right, #8E2DE2, #4A00E0)',
+                                 borderRadius: '100px',
+                                 width: '50px',
+                                 top: '-25px',
+                                 color: 'white',
+                                 position: 'relative',
+                                 height: '50px',
+                                 transform: 'scale(0.7)'
+                            }}type="submit" disabled={loading} >
                                 <ArrowForwardIcon />
                             </button>
                         </Grid>

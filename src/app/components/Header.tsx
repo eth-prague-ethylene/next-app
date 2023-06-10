@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useWalletLogin } from "@lens-protocol/react-web";
 import { useAccount, useDisconnect, useConnect } from "wagmi";
 import { InjectedConnector } from 'wagmi/connectors/injected';
+import LensIcon from "./Lens/LensIcon";
 
 export default function Header() {
     const { execute: login, isPending: isLoginPending } = useWalletLogin();
@@ -38,10 +39,27 @@ export default function Header() {
             </Grid>
             <Grid item xs={5} >
                 <div style={{ padding: '15px', display: 'flex', justifyContent: 'flex-end' }}>
-                    <button disabled={isLoginPending} onClick={onLoginClick}>
-                        Sign in
+                    <button
+                        disabled={isLoginPending}
+                        onClick={onLoginClick}
+                        style={{
+                            background: '#00501E',
+                            display: 'flex',
+                            alignItems: 'center',
+                            position: 'relative',
+                            margin: '10px',
+                            border: 'none',
+                            borderRadius: '10px',
+                            color: 'white',
+                            padding: '10px',
+                            whiteSpace: 'nowrap'
+                        }}
+                    >
+                        <LensIcon  />
+                        Sign in with lens
                     </button>
                 </div>
+
             </Grid>
         </Grid>
     )
