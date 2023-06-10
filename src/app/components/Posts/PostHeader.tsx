@@ -3,10 +3,11 @@ import { MediaSet, NftImage } from "@lens-protocol/react-web"
 import { Grid, Typography } from "@mui/material"
 import Image from "next/image"
 
-export const PostHeader = ({ picture, handle, username }: {
+export const PostHeader = ({ picture, handle, username, createdAt }: {
     picture: NftImage | MediaSet | null,
     handle: string,
-    username: string
+    username: string,
+    createdAt: string
 }) => {
     return (
         <Grid container>
@@ -19,7 +20,7 @@ export const PostHeader = ({ picture, handle, username }: {
             }}>
                 <Typography variant="body2">
                     {username}
-                </Typography>
+                </Typography>                
                 <Typography variant="caption" sx={{
                     fontSize: '10px',
                     opacity: '0.5',

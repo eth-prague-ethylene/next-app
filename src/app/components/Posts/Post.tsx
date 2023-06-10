@@ -8,9 +8,9 @@ import { umaStatuses } from "@/constants"
 import { BigNumber } from "ethers"
 import { UmaStatuses } from "@/types/Post"
 
-export const Post = ({ picture, handle, username, lensPostId, textContent, numberOfComments, comingStatus }: {
+export const Post = ({ picture, handle, username, lensPostId, textContent, numberOfComments, comingStatus, createdAt }: {
     picture: MediaSet | NftImage | null, handle: string, username: string, lensPostId: string, textContent: string,
-    numberOfComments: number | null, comingStatus?: UmaStatuses
+    numberOfComments: number | null, comingStatus?: UmaStatuses, createdAt: string
 }) => {
     const { getAssertionData } = useEthProvider();
     const [status, setStatus] = useState('loading...');
@@ -50,6 +50,7 @@ export const Post = ({ picture, handle, username, lensPostId, textContent, numbe
                     profile={picture}
                     handle={handle} username={username}
                     textContent={textContent}
+                    createdAt={createdAt}
                 />
             </Grid>
             <Grid item xs={12} sx={{ background: '#181818', marginRight: '10px', marginLeft: '10px', borderRadius: '0 0 10px 10px', color: 'white', padding: '10px' }}>

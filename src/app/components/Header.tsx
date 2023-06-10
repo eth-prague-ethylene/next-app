@@ -31,7 +31,7 @@ export default function Header() {
 
     return (
         <Grid container sx={{ maxHeight: '150px' }}>
-            <Grid item xs={7} sx={{ padding: '10px' }}>
+            <Grid item xs={7} sx={{ padding: '10px' }} className="logo-container">
                 <Image style={{
                     paddingLeft: '15px',
                     transform: 'scale(1.3)'
