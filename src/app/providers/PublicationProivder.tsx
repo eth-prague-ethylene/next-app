@@ -11,11 +11,9 @@ export const PubProvider = ({ children }: {
 }) => {
     const [publications, setPublications] = useState<AnyPublication[]>();
     const { data, loading, hasMore, next } = useExplorePublications({
-        limit: 5,
+        limit: 20,
         sortCriteria: PublicationSortCriteria.Latest
     });
-
-    console.log({ data })
 
     useEffect(() => {
         if (data != undefined) {

@@ -9,6 +9,7 @@ import { useEthProvider } from "@/app/providers/EthersProvider";
 import { useState } from "react";
 import { toast } from 'react-hot-toast';
 import { BigNumber } from "ethers";
+import { umaStatuses } from "@/constants";
 
 export const CreatePostForm = ({ publisher }: {
     publisher: ProfileOwnedByMe
@@ -32,10 +33,8 @@ export const CreatePostForm = ({ publisher }: {
                 const newPost = await createPost(profileId, uri, wallet.address);
                 const postId = newPost?.data.createPostTypedData.id;
                 const hexString = '0x' + newPost?.data.createPostTypedData.typedData.value.nonce.toString(16).padStart(2, '0');
-                console.log(`hexString: ${hexString}`);
                 const truePostId = `${profileId}-${hexString}`;
 
-                console.log(`truePostID: ${truePostId}`);
 
                 await assertToOracle(content, truePostId);
                 if (publications != undefined) {
@@ -49,7 +48,8 @@ export const CreatePostForm = ({ publisher }: {
                         metadata: {
                             content: content
                         },
-                        numberOfComments: 0
+                        numberOfComments: 0,
+                        status: umaStatuses.PENDING
                     },...publications]);
                 }
                 closeLoadingToast();

@@ -34,7 +34,6 @@ export const EthProvider = ({ children }: {
     const getAssertionData = async (postId: string, profileId: string) => {
         const contract = new ethers.Contract(contractAddress, abi, provider);
         const fullPostid = `${profileId}-${postId}`;
-        console.log(`${fullPostid} - ${stringToHex(fullPostid)}`);
         const data = await contract.getAssertionData(stringToHex(fullPostid));
         return data;
     }
@@ -64,8 +63,6 @@ export const EthProvider = ({ children }: {
     const getArrayData = async (): Promise<any> => {
         const contract = new ethers.Contract(contractAddress, abi, provider);
         const data = await contract.getArrayData();
-        console.log(data);
-        console.log(stringToHex('0x857d-0x18') === data[0]);
     }
 
     return <EthersContext.Provider value={{

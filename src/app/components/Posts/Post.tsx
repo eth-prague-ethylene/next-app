@@ -6,10 +6,11 @@ import { useEthProvider } from "@/app/providers/EthersProvider"
 import { useEffect, useState } from "react"
 import { umaStatuses } from "@/constants"
 import { BigNumber } from "ethers"
+import { UmaStatuses } from "@/types/Post"
 
-export const Post = ({ picture, handle, username, lensPostId, textContent, numberOfComments }: {
+export const Post = ({ picture, handle, username, lensPostId, textContent, numberOfComments, comingStatus }: {
     picture: MediaSet | NftImage | null, handle: string, username: string, lensPostId: string, textContent: string,
-    numberOfComments: number | null
+    numberOfComments: number | null, comingStatus?: UmaStatuses
 }) => {
     const { getAssertionData } = useEthProvider();
     const [status, setStatus] = useState('loading...');
@@ -19,7 +20,6 @@ export const Post = ({ picture, handle, username, lensPostId, textContent, numbe
             const data = await getAssertionData(BigNumber.from(lensPostId.slice(-4)).sub('0x00').toHexString(), username);
             const expTime = data.expirationTime;
             const now = Math.floor(Date.now() / 1000);
-            console.log(data);
             if (expTime <= now) {
                 if (data.settled === true) {
                     if (data.settlementResolution === true) {
@@ -36,6 +36,12 @@ export const Post = ({ picture, handle, username, lensPostId, textContent, numbe
             }
         })()
     }, [])
+
+    useEffect(() => {
+        if (comingStatus != null) {
+            setStatus(umaStatuses.PENDING)
+        }
+    }, [comingStatus])
 
     return (
         <Grid container sx={{ marginTop: '1em' }}>

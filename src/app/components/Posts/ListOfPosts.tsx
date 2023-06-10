@@ -16,10 +16,6 @@ export const ListOfPosts = () => {
         })()
     })
 
-    useEffect(() => {
-        console.log(JSON.stringify(publications));
-    }, [publications])
-
     return (
         <Grid container>
             {
@@ -27,13 +23,14 @@ export const ListOfPosts = () => {
                     publications.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((post: AnyPublication, index: number) => {
                         return (
                             <Post
-                                key={index}
+                                key={post.id}
                                 lensPostId={post.id}
                                 picture={post.profile.picture}
                                 username={post.profile.id}
                                 handle={post.profile.handle}
                                 textContent={(post as any).metadata.content}
                                 numberOfComments={(post as any).numberOfComments}
+                                comingStatus={(post as any).status}
                             />
                         )
                     })
