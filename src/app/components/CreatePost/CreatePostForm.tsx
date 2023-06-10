@@ -6,11 +6,13 @@ import { ContentFocus, ProfileOwnedByMe, useActiveProfile, useActiveWallet, useC
 import { useEffect } from "react";
 import { createPost, getHandle, getProfile } from "@/apis/getProfile";
 import { usePubProvider } from "@/app/providers/PublicationProivder";
+import { useEthProvider } from "@/app/providers/EthersProvider";
 
 export const CreatePostForm = ({ publisher }: {
     publisher: ProfileOwnedByMe
 }) => {
     const { publications, handleSetPublications } = usePubProvider();
+    const { assertToOracle } = useEthProvider();
     const { data: wallet } = useActiveWallet();
     const { data } = useActiveProfile();
 
@@ -21,9 +23,11 @@ export const CreatePostForm = ({ publisher }: {
             const uri = await uploadJson(content, handle);
             const profileId = await getProfile(handle);
             const newPost = await createPost(profileId, uri, wallet.address);
+            const postId = newPost?.data.createPostTypedData.id;
+            await assertToOracle(content, postId)
             if (publications != undefined) {
                 handleSetPublications([{
-                    id: newPost?.data.createPostTypedData.id,
+                    id: postId,
                     profile: {
                         username: data?.id,
                         picture: data?.picture,
