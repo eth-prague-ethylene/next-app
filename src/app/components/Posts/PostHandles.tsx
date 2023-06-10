@@ -2,8 +2,9 @@ import { umaStatuses } from "@/constants"
 import { UmaStatuses } from "@/types/Post"
 import { Badge, Chip, Grid, Typography } from "@mui/material"
 import CommentIcon from '@mui/icons-material/Comment';
-export const PostHandles = ({ status }: {
-    status: UmaStatuses
+export const PostHandles = ({ status, numberOfComments }: {
+    status: UmaStatuses,
+    numberOfComments: number | null
 }) => {
     const getBackgroundColor = () => {
         if (status === umaStatuses.FALSE) return 'red';
@@ -13,7 +14,8 @@ export const PostHandles = ({ status }: {
     return (
         <Grid container>
             <Grid item xs={8}>
-                <Badge color={'primary'} badgeContent={Math.floor(Math.random() * 100)}>
+                <Badge color={'primary'}
+                    badgeContent={numberOfComments == undefined ? Math.floor(Math.random() * 100) : numberOfComments}>
                     <CommentIcon />
                 </Badge>
                 <Typography variant={'caption'}>{ }</Typography>

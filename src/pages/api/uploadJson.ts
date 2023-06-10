@@ -6,13 +6,23 @@ const pinata = new pinataSDK('43c382b0d8ecea2b465e', '401eb6aa63cadd7b4cdcf60809
 
 export default async function handler(req: any, res: any) {
     const content = req.query.content;
+    const handle = req.query.handle;
     
     if (content == null) {
         return res.status(400).json({ message: 'no content found in request' });
     }
     const body = {
-        message: content
+        version: "2.0.0",
+        metadata_id: "83235e1a-839c-4c9e-bafd-dc62ed889146",
+        appId: "ethylene",
+        mainContentFocus: 'TEXT_ONLY',
+        content: content,
+        description: "Description of the post",
+        name: `Post by ${handle}`,
+        locale: 'en-US',
+        tags: ['lens-sdk']
     }
+    console.log(body);
     const result = await pinata.pinJSONToIPFS(body);
     res.status(200).json({ text: 'Hello', result });
 }

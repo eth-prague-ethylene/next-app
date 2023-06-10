@@ -8,6 +8,7 @@ import { useActiveProfile, useActiveWallet } from '@lens-protocol/react-web';
 export default function Home() {
   const { data } = useActiveProfile();
 
+
   return (
     <>
       {

@@ -2,37 +2,42 @@ import { Grid } from "@mui/material"
 import { Formik } from 'formik';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { uploadJson } from "@/app/utils";
-import { ContentFocus, ProfileOwnedByMe, useActiveWallet, useCreatePost } from '@lens-protocol/react-web';
+import { ContentFocus, ProfileOwnedByMe, useActiveProfile, useActiveWallet, useCreatePost } from '@lens-protocol/react-web';
 import { useEffect } from "react";
 import { createPost, getHandle, getProfile } from "@/apis/getProfile";
+import { usePubProvider } from "@/app/providers/PublicationProivder";
 
 export const CreatePostForm = ({ publisher }: {
     publisher: ProfileOwnedByMe
 }) => {
+    const { publications, handleSetPublications } = usePubProvider();
     const { data: wallet } = useActiveWallet();
-    const { execute: create, error, isPending } = useCreatePost({ publisher, upload: uploadJson });
+    const { data } = useActiveProfile();
 
     const handleSubmit = async (values: any) => {
         if (wallet != null) {
             const content = values.postContent;
-            const uri = await uploadJson(content);
             const handle = await getHandle(wallet.address);
+            const uri = await uploadJson(content, handle);
             const profileId = await getProfile(handle);
-            await createPost(profileId, uri, wallet.address);
+            const newPost = await createPost(profileId, uri, wallet.address);
+            if (publications != undefined) {
+                handleSetPublications([{
+                    id: newPost?.data.createPostTypedData.id,
+                    profile: {
+                        username: data?.id,
+                        picture: data?.picture,
+                        handle: data?.handle,
+                    },
+                    metadata: {
+                        content: content
+                    },
+                    numberOfComments: 0
+                }, ...publications]);
+            }
         }
     }
 
-    useEffect(() => {
-        console.log(publisher);
-    }, [publisher])
-
-    useEffect(() => {
-        console.log(`Is pending: ${isPending}`)
-    }, [isPending]);
-
-    useEffect(() => {
-        console.log(`Error: ${error}`);
-    }, [error])
     return (
         <Formik
             initialValues={{ postContent: '' }}

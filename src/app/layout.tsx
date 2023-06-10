@@ -9,6 +9,7 @@ import { polygonMumbai } from 'wagmi/chains'
 import { publicProvider } from 'wagmi/providers/public'
 import { LensProvider, LensConfig, appId, development, sources } from '@lens-protocol/react-web'
 import { bindings as wagmiBindings } from '@lens-protocol/wagmi'
+import { PubProvider } from './providers/PublicationProivder'
 
 const { provider, webSocketProvider } = configureChains([polygonMumbai], [publicProvider()])
 
@@ -37,12 +38,14 @@ export default function RootLayout({
         <script async src="https://lens.xyz/widget.js"></script>
       </head>
       <body>
-
         <WagmiConfig client={client}>
           <LensProvider config={lensConfig}>
-            <Header />
-            {children}
-            <LabelBottomNavigation />
+            <PubProvider>
+              <Header />
+              {children}
+              <LabelBottomNavigation />
+            </PubProvider>
+
           </LensProvider>
         </WagmiConfig>
       </body>

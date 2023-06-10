@@ -1,18 +1,21 @@
 import { AnyPublication, useExplorePublications } from '@lens-protocol/react-web';
 import { Grid, Skeleton } from '@mui/material';
 import { Post } from './Post';
+import { usePubProvider } from '@/app/providers/PublicationProivder';
 import { useEffect } from 'react';
 
 export const ListOfPosts = () => {
-    const { data, loading, hasMore, next } = useExplorePublications({
-        limit: 1
-    });
+    const { publications } = usePubProvider();
+
+    useEffect(() => {
+        console.log(publications);
+    }, [publications])
 
     return (
         <Grid container>
             {
-                data != undefined ? (
-                    data.map((post: AnyPublication, index: number) => {
+                publications != undefined ? (
+                    publications.map((post: AnyPublication, index: number) => {
                         return (
                             <Post
                                 key={index}
@@ -20,7 +23,8 @@ export const ListOfPosts = () => {
                                 picture={post.profile.picture}
                                 username={post.profile.id}
                                 handle={post.profile.handle}
-                                textContent={'Today we have planted one tree per each burger we have sold in our restaurants!'}
+                                textContent={(post as any).metadata.content}
+                                numberOfComments={(post as any).numberOfComments}
                             />
                         )
                     })

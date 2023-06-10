@@ -16,10 +16,10 @@ export function formatPicture(picture: any) {
   }
 }
 
-export const uploadJson = async (postContent: unknown): Promise<string> => {
+export const uploadJson = async (postContent: unknown, handle: string): Promise<string> => {
   const gateWayPinataUrl = 'https://gateway.pinata.cloud/ipfs/'
   if (postContent != null) {
-    const result = await axios.get(`/api/uploadJson?content=${postContent}`);
+    const result = await axios.get(`/api/uploadJson?content=${postContent}&handle=${handle}`);
     const hash = result.data.result.IpfsHash;
     const fullUrl = `${gateWayPinataUrl}${hash}`;
     return fullUrl;
