@@ -13,7 +13,7 @@ const EthersContext = createContext<EthersProvider>({} as EthersProvider);
 export const EthProvider = ({ children }: {
     children: any
 }) => {
-    const contractAddress = "0xdB6497399367e938bb04C2694CFcC5824930a3da";
+    const contractAddress = "0xF342C5f80b1C3B4A9dE477a1AE20e4EDaE1A7f8c";
     const provider = new ethers.providers.Web3Provider(window.ethereum as unknown as ethers.providers.ExternalProvider);
 
     const settle = async (postId: string): Promise<any> => {
