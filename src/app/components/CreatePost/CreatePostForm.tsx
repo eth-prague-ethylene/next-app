@@ -35,25 +35,25 @@ export const CreatePostForm = ({ publisher }: {
                 const uri = await uploadJson(content, handle);
                 const profileId = await getProfile(handle);
                 const newPost = await createPost(profileId, uri, wallet.address);
-                const postId = newPost?.data.createPostTypedData.id;
                 const hexString = '0x' + newPost?.data.createPostTypedData.typedData.value.nonce.toString(16).padStart(2, '0');
                 const truePostId = `${profileId}-${hexString}`;
-
 
                 await assertToOracle(content, truePostId);
                 if (publications != undefined) {
                     handleSetPublications([{
-                        id: postId,
+                        id: truePostId,
                         profile: {
                             username: data?.id,
                             picture: data?.picture,
                             handle: data?.handle,
+                            id: data?.id,
                         },
                         metadata: {
                             content: content
                         },
                         numberOfComments: 0,
-                        status: umaStatuses.PENDING
+                        status: umaStatuses.PENDING,
+                        createdAt: new Date().toISOString(),
                     }, ...publications]);
                 }
                 closeLoadingToast();

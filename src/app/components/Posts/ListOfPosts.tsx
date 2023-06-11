@@ -6,15 +6,7 @@ import { useEffect } from 'react';
 import { useEthProvider } from '@/app/providers/EthersProvider';
 
 export const ListOfPosts = () => {
-
     const { publications } = usePubProvider();
-    const { getArrayData } = useEthProvider()
-
-    useEffect(() => {
-        (async () => {
-            await getArrayData();
-        })()
-    })
 
     return (
         <Grid container>
@@ -22,10 +14,10 @@ export const ListOfPosts = () => {
                 publications != undefined ? (
                     publications.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((post: AnyPublication, index: number) => {
                         return (
-                            <div className={'slide-in'} style={{width: '100%'}}>
+                            <div className={'slide-in'} key={post.id}
+                                style={{ width: '100%' }}>
                                 <Post
                                     createdAt={post.createdAt}
-                                    key={post.id}
                                     lensPostId={post.id}
                                     picture={post.profile.picture}
                                     username={post.profile.id}

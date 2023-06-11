@@ -6,13 +6,14 @@ type EthersProvider = {
     assertToOracle: (contentOfThePost: string, postId: string) => Promise<void>,
     getAssertionData: (postId: string, profileId: string) => Promise<any>,
     getArrayData: () => Promise<any>,
-    settle: (postId: string) => Promise<any>
+    settle: (postId: string) => Promise<any>,
+    getAssertionResult: (postId: string) => Promise<any>
 }
 const EthersContext = createContext<EthersProvider>({} as EthersProvider);
 export const EthProvider = ({ children }: {
     children: any
 }) => {
-    const contractAddress = "0x5ED4c9948FA1BAd69B5345ea5102F8Cd89146571";
+    const contractAddress = "0xdB6497399367e938bb04C2694CFcC5824930a3da";
     const provider = new ethers.providers.Web3Provider(window.ethereum as unknown as ethers.providers.ExternalProvider);
 
     const settle = async (postId: string): Promise<any> => {
@@ -35,6 +36,7 @@ export const EthProvider = ({ children }: {
         const contract = new ethers.Contract(contractAddress, abi, provider);
         const fullPostid = `${profileId}-${postId}`;
         const data = await contract.getAssertionData(stringToHex(fullPostid));
+        console.log(stringToHex(fullPostid) );
         return data;
     }
 
@@ -63,13 +65,25 @@ export const EthProvider = ({ children }: {
     const getArrayData = async (): Promise<any> => {
         const contract = new ethers.Contract(contractAddress, abi, provider);
         const data = await contract.getArrayData();
+        console.log(data);
     }
+
+    const getAssertionResult = async (postId: string) => {
+        const contract = new ethers.Contract(contractAddress, abi, provider);
+        const data = await contract.getAssertionResult(stringToHex(postId));
+        return data;
+    }
+
+    useEffect(() => {
+        getArrayData();
+    }, [])
 
     return <EthersContext.Provider value={{
         assertToOracle,
         settle,
         getAssertionData,
-        getArrayData
+        getArrayData,
+        getAssertionResult
     }}>{children}</EthersContext.Provider>
 }
 export const useEthProvider = () => useContext(EthersContext);

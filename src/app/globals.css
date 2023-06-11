@@ -28,25 +28,7 @@ body {
   overflow: hidden;
 }
 
-.logo-container img {
-  position: absolute;
-  left: -100%;
-  /* Posiziona l'immagine fuori dallo schermo a sinistra */
-  animation: slide-in 1s forwards;
-  /* Applica l'animazione con durata di 1 secondo */
-}
 
-@keyframes slide-in {
-  0% {
-    left: -100%;
-    /* Posizione iniziale dell'immagine fuori dallo schermo a sinistra */
-  }
-
-  100% {
-    left: 10px;
-    /* Posizione finale dell'immagine a sinistra (posizione iniziale della visualizzazione) */
-  }
-}
 
 @keyframes slideInFromLeft {
   0% {

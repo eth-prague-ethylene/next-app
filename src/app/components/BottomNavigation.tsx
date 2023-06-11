@@ -7,7 +7,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PublicIcon from '@mui/icons-material/Public';
-
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 export default function LabelBottomNavigation() {
   const [value, setValue] = React.useState('recents');
 
@@ -37,7 +37,7 @@ export default function LabelBottomNavigation() {
         value="nearby"
         icon={<LocationOnIcon />}
       />
-      <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
+      <BottomNavigationAction label="Folder" value="folder" icon={<NotificationsActiveIcon />} />
     </BottomNavigation>
   );
 }
