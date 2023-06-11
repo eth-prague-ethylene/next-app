@@ -6,32 +6,28 @@ import { useEffect } from 'react';
 import { useEthProvider } from '@/app/providers/EthersProvider';
 
 export const ListOfPosts = () => {
-    
     const { publications } = usePubProvider();
-    const { getArrayData } = useEthProvider()
-
-    useEffect(() => {
-        (async () => {
-            await getArrayData();
-        })()
-    })
 
     return (
         <Grid container>
             {
                 publications != undefined ? (
-                    publications.sort((a:any, b:any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((post: AnyPublication, index: number) => {
+                    publications.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((post: AnyPublication, index: number) => {
                         return (
-                            <Post
-                                key={post.id}
-                                lensPostId={post.id}
-                                picture={post.profile.picture}
-                                username={post.profile.id}
-                                handle={post.profile.handle}
-                                textContent={(post as any).metadata.content}
-                                numberOfComments={(post as any).numberOfComments}
-                                comingStatus={(post as any).status}
-                            />
+                            <div className={'slide-in'} key={post.id}
+                                style={{ width: '100%' }}>
+                                <Post
+                                    createdAt={post.createdAt}
+                                    lensPostId={post.id}
+                                    picture={post.profile.picture}
+                                    username={post.profile.id}
+                                    handle={post.profile.handle}
+                                    textContent={(post as any).metadata.content}
+                                    numberOfComments={(post as any).numberOfComments}
+                                    comingStatus={(post as any).status}
+                                />
+                            </div>
+
                         )
                     })
                 ) : (

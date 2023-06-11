@@ -6,10 +6,12 @@ import { ProfileOwnedByMe, useActiveProfile, useActiveWallet, useCreatePost } fr
 import { createPost, getHandle, getProfile } from "@/apis/getProfile";
 import { usePubProvider } from "@/app/providers/PublicationProivder";
 import { useEthProvider } from "@/app/providers/EthersProvider";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from 'react-hot-toast';
-import { BigNumber } from "ethers";
 import { umaStatuses } from "@/constants";
+import ImageIcon from '@mui/icons-material/Image';
+import PlaceIcon from '@mui/icons-material/Place';
+import PersonalVideoIcon from '@mui/icons-material/PersonalVideo';
 
 export const CreatePostForm = ({ publisher }: {
     publisher: ProfileOwnedByMe
@@ -20,6 +22,8 @@ export const CreatePostForm = ({ publisher }: {
     const { data } = useActiveProfile();
     const [toastId, setToastId] = useState('');
     const [loading, setLoading] = useState(false);
+    const [placeholder, setPlaceholder] = useState('');
+    const defaultPlaceholder = "What sustainable action have you taken today?";
 
     const handleSubmit = async (values: any) => {
         setLoading(true);
@@ -31,26 +35,26 @@ export const CreatePostForm = ({ publisher }: {
                 const uri = await uploadJson(content, handle);
                 const profileId = await getProfile(handle);
                 const newPost = await createPost(profileId, uri, wallet.address);
-                const postId = newPost?.data.createPostTypedData.id;
                 const hexString = '0x' + newPost?.data.createPostTypedData.typedData.value.nonce.toString(16).padStart(2, '0');
                 const truePostId = `${profileId}-${hexString}`;
-
 
                 await assertToOracle(content, truePostId);
                 if (publications != undefined) {
                     handleSetPublications([{
-                        id: postId,
+                        id: truePostId,
                         profile: {
                             username: data?.id,
                             picture: data?.picture,
                             handle: data?.handle,
+                            id: data?.id,
                         },
                         metadata: {
                             content: content
                         },
                         numberOfComments: 0,
-                        status: umaStatuses.PENDING
-                    },...publications]);
+                        status: umaStatuses.PENDING,
+                        createdAt: new Date().toISOString(),
+                    }, ...publications]);
                 }
                 closeLoadingToast();
                 setLoading(false);
@@ -74,6 +78,25 @@ export const CreatePostForm = ({ publisher }: {
         setToastId('');
     }
 
+    useEffect(() => {
+        let currentIndex = 0;
+        const interval = setInterval(() => {
+            setPlaceholder((prevPlaceholder) => {
+                const nextChar = defaultPlaceholder[currentIndex];
+                const newPlaceholder = prevPlaceholder + nextChar;
+                currentIndex++;
+                if (currentIndex === defaultPlaceholder.length) {
+                    clearInterval(interval);
+                }
+                return newPlaceholder;
+            });
+        }, 40); // Delay di 100 millisecondi tra ogni carattere
+
+        return () => {
+            clearInterval(interval); // Pulizia dell'intervallo quando il componente viene smontato
+        };
+    }, [defaultPlaceholder]);
+
     return (
         <Formik
             initialValues={{ postContent: '' }}
@@ -83,6 +106,7 @@ export const CreatePostForm = ({ publisher }: {
             }}
         >
             {(formik) => (
+
                 <form onSubmit={formik.handleSubmit}>
                     <Grid container >
                         <Grid item xs={12} sx={{
@@ -94,10 +118,11 @@ export const CreatePostForm = ({ publisher }: {
                         }}>
                             <textarea
                                 rows={5}
+                                id="text-area-post-content"
                                 name="postContent"
                                 onChange={formik.handleChange}
                                 style={{ background: 'transparent', width: '100%', border: 'none', color: 'white', padding: '10px' }}
-                                placeholder="What sustainable action have you taken today?"></textarea>
+                                placeholder={placeholder}></textarea>
                         </Grid>
                         <Grid item xs={12} sx={{
                             background: 'black',
@@ -107,19 +132,31 @@ export const CreatePostForm = ({ publisher }: {
                             textAlign: 'right',
                             maxHeight: '32px'
                         }}>
-                            <button style={{
-                                border: 'none',
-                                background: 'linear-gradient(to right, #8E2DE2, #4A00E0)',
-                                borderRadius: '100px',
-                                width: '50px',
-                                top: '-25px',
-                                color: 'white',
-                                position: 'relative',
-                                height: '50px',
-                                transform: 'scale(0.7)'
-                            }} type="submit" disabled={loading} >
-                                <ArrowForwardIcon />
-                            </button>
+                            <Grid container>
+                                <Grid item xs={4} sx={{
+                                    textAlign: 'left'
+                                }}>
+                                    <ImageIcon style={{ marginLeft: '10px',marginTop: '4px',color: 'white', transform: 'scale(0.8)' }} />
+                                    <PlaceIcon style={{color: 'white', marginLeft: '2px', transform: 'scale(0.8)'}} />
+                                    <PersonalVideoIcon style={{color: 'white', marginLeft: '2px', transform: 'scale(0.8)'}}  />
+                                </Grid>
+                                <Grid item xs={8}>
+                                    <button style={{
+                                        border: 'none',
+                                        background: 'linear-gradient(to right, #8E2DE2, #4A00E0)',
+                                        borderRadius: '100px',
+                                        width: '50px',
+                                        top: '-25px',
+                                        color: 'white',
+                                        position: 'relative',
+                                        height: '50px',
+                                        transform: 'scale(0.7)'
+                                    }} type="submit" disabled={loading} >
+                                        <ArrowForwardIcon />
+                                    </button>
+                                </Grid>
+                            </Grid>
+
                         </Grid>
                     </Grid>
                 </form>

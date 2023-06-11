@@ -1,5 +1,5 @@
 export const constants = {
-    LENS_APP_ID: 'ethylene7'
+    LENS_APP_ID: 'ethylene10'
 }
 
 export const umaStatuses= {

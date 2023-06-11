@@ -22,3 +22,26 @@ body {
 .iframe-near {
   overflow: hidden;
 }
+
+.logo-container {
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in {
+  animation: slideInFromLeft 0.5s ease-in-out forwards;
+}

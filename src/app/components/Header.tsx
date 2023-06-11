@@ -31,7 +31,7 @@ export default function Header() {
 
     return (
         <Grid container sx={{ maxHeight: '150px' }}>
-            <Grid item xs={7} sx={{ padding: '10px' }}>
+            <Grid item xs={7} sx={{ padding: '10px' }} className="logo-container">
                 <Image style={{
                     paddingLeft: '15px',
                     transform: 'scale(1.3)'
@@ -43,7 +43,7 @@ export default function Header() {
                         disabled={isLoginPending}
                         onClick={onLoginClick}
                         style={{
-                            background: '#00501E',
+                            background: 'linear-gradient(to right, #8E2DE2, #4A00E0)',
                             display: 'flex',
                             alignItems: 'center',
                             position: 'relative',
